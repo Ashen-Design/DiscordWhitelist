@@ -10,7 +10,7 @@ There is only one permission for the plugin:
 `discordwhitelist.admin`
 This permission allows a player to disable the whitelisting function of this plugin (effectively disabling it).
 
-##Requirements
+## Requirements
 This plugin requires [Vault](https://www.spigotmc.org/resources/vault.34315/).
 
 ## Installation
