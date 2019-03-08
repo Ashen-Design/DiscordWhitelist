@@ -1,0 +1,18 @@
+name: DiscordWhitelist
+version: 1.0.0
+author: AshenGaming
+main: uk.co.ashendesign.discordwhitelist.Main
+api-version: 1.13
+description: A Discord integrated whitelist providing various methods of authenticating your players.
+website: www.ashendesign.co.uk
+prefix: DiscordWhitelist
+commands:
+  discordwhitelist:
+    description: Allows you to set up or disable a whitelist
+    permission: discordwhitelist.admin
+    permission-message: You not have have permission to use this command.
+    usage: /<command> whitelist [on|off]
+aliases: dw
+permissions:
+  discordwhitelist.admin:
+    description: Gives you access to turn the whitelist on/off.
