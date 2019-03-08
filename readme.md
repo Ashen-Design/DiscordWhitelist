@@ -10,6 +10,9 @@ There is only one permission for the plugin:
 `discordwhitelist.admin`
 This permission allows a player to disable the whitelisting function of this plugin (effectively disabling it).
 
+##Requirements
+This plugin requires [Vault](https://www.spigotmc.org/resources/vault.34315/).
+
 ## Installation
 To use the plugin, you must first [register an application](https://discordapp.com/developers/applications/) with the Discord API website. Once you've done this, you will need to grab your application's `clientID` and `clientSecret` tokens and enter them into the `config.yml` file found within the plugin's data folder.
 
