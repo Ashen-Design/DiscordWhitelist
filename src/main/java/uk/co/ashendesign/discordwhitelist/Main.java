@@ -17,6 +17,11 @@ public class Main extends JavaPlugin{
     private static Main instance;
     public static Main getInstance() { return instance; }
 
+    public static Main saveConfigInstance() {
+        instance.saveConfig();
+        return instance;
+    }
+
     @Override
     public void onEnable(){
 
@@ -33,6 +38,7 @@ public class Main extends JavaPlugin{
         return this.customConfig;
     }
 
+    //Create the initial config file for use in the plugin.
     private void createCustomConfig(){
         configFile = new File(getDataFolder(), "config.yml");
         if(!configFile.exists()){
@@ -47,8 +53,6 @@ public class Main extends JavaPlugin{
             e.printStackTrace();
         }
     }
-
-
 
     @Override
     public void onDisable(){
