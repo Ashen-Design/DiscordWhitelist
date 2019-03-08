@@ -15,6 +15,7 @@ public class CommandWhitelist implements CommandExecutor {
         Player player = (Player) sender;
         if(sender instanceof Player){
 
+            //Checks if the player has the correct permission in order to use the command.
             if(Main.perms.has(player, "discordwhitelist.admin")){
                 //Check if the player sends an empty command.
                 if(args.length == 0){
@@ -23,7 +24,7 @@ public class CommandWhitelist implements CommandExecutor {
                     //Listens for the 'whitelist' sub-command.
                     if(args[0].equalsIgnoreCase("whitelist") && args.length < 2){
                         sender.sendMessage("Please specify on/off");
-                    } else {
+                    } else if(args[0].equalsIgnoreCase("whitelist") && args.length >= 2){
                         //Codeblock to determine correct output.
                         if(args[1].equalsIgnoreCase("on") && !whitelistEnabled){
                             Main.getInstance().getConfig().set("enabled", true);
