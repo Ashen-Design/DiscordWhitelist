@@ -12,7 +12,7 @@ commands:
     permission: discordwhitelist.admin
     permission-message: You not have have permission to use this command.
     usage: /<command> whitelist [on|off]
-aliases: dw
+    aliases: dw
 permissions:
   discordwhitelist.admin:
     description: Gives you access to turn the whitelist on/off.
