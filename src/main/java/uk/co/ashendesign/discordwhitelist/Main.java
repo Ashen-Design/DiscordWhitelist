@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 //Import Vault permissions management
 import net.milkbowl.vault.permission.Permission;
 
+
 public class Main extends JavaPlugin{
 
     private File configFile;
