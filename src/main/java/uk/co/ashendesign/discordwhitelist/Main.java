@@ -1,5 +1,6 @@
 package uk.co.ashendesign.discordwhitelist;
 
+
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,26 +15,31 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.permission.Permission;
 
 
+
+import static org.bukkit.Bukkit.getLogger;
+
+
 public class Main extends JavaPlugin{
 
     private File configFile;
+
     private FileConfiguration customConfig;
+
 
     private static final Logger log = Logger.getLogger("Minecraft");
 
-    public static Permission perms = null;
+    static Permission perms = null;
 
     private static Main instance;
-    public static Main getInstance() { return instance; }
+    static Main getInstance() { return instance; }
 
-    public static Main saveConfigInstance() {
+    static Main saveConfigInstance() {
         instance.saveConfig();
         return instance;
     }
 
     @Override
     public void onEnable(){
-
         //Register whitelist command
         this.getCommand("discordwhitelist").setExecutor(new CommandWhitelist());
 
@@ -42,12 +48,16 @@ public class Main extends JavaPlugin{
 
         instance = this;
 
+
         //Enable Permissions
         if(!setupPermissions()) {
             log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        DiscordClient.initialise(getConfig().getString("discord.clientID"));
+
     }
 
     private boolean setupPermissions() {

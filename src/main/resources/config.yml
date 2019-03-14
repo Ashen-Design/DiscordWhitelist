@@ -1,8 +1,8 @@
 enabled: true
 
 discord:
-  ownerID: 'ID of Owner user account goes here'
-  clientID: 'clientID for the bot goes here'
-  clientSecret: 'clientSecret for the bot goes here'
-  channelID: 'ID of the channel you want the bot to post in/check for verification'
-  roleID: 'ID of the role you wish to check for in order to allow verification'
+  ownerID: 'OWNERID_HERE'
+  clientID: 'CLIENTID_HERE'
+  clientSecret: 'CLIENTSECRET_HERE'
+  channelID: 'CHANNELID_HERE'
+  roleID: 'ROLEID_HERE'
