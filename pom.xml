@@ -47,18 +47,6 @@
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.sxtanna</groupId>
-            <artifactId>DependencyLoader</artifactId>
-            <version>LATEST</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.discord4j</groupId>
-            <artifactId>discord4j-core</artifactId>
-            <version>3.0.0</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
