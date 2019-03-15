@@ -1,8 +1,23 @@
+# DiscordWhitelist
+
+# GENERAL SETTINGS #
+
+# Sets whether the whitelisting feature is enabled. Note: this does not disable whitelisting, just whether the bot functionality is enabled.
 enabled: true
 
+# If set to 'true' then the plugin will not run the bot, but will instead listen for messages from the bungeecord plugin.
+enable-bungeecord: false
+
+# Sets the Discord IDs for various features.
 discord:
+  # This is the ID of the server owner.
   ownerID: 'OWNERID_HERE'
+
+  # This ID should be the bot token. You can generate one from the Discord developer applications portal. (See plugin page for details).
   clientID: 'CLIENTID_HERE'
-  clientSecret: 'CLIENTSECRET_HERE'
-  channelID: 'CHANNELID_HERE'
+
+  # If you want to check for a specific role, set this to 'true'.
+  use-roleID: false
+
+  # This is the ID of the role you wish to check for.
   roleID: 'ROLEID_HERE'

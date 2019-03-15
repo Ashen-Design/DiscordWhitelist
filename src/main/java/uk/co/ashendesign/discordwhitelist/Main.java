@@ -15,10 +15,6 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.permission.Permission;
 
 
-
-import static org.bukkit.Bukkit.getLogger;
-
-
 public class Main extends JavaPlugin{
 
     private File configFile;
