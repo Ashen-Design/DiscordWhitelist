@@ -18,6 +18,7 @@ import net.milkbowl.vault.permission.Permission;
 public class Main extends JavaPlugin{
 
     private File configFile;
+    private File userList;
 
     private FileConfiguration customConfig;
 
@@ -73,6 +74,11 @@ public class Main extends JavaPlugin{
         if(!configFile.exists()){
             configFile.getParentFile().mkdirs();
             saveResource("config.yml",false);
+        }
+
+        userList = new File(getDataFolder(), "userlist.json");
+        if(!userList.exists()){
+            saveResource("userlist.json", false);
         }
 
         customConfig = new YamlConfiguration();

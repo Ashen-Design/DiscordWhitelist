@@ -8,17 +8,14 @@ import org.bukkit.Bukkit;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 import static org.bukkit.Bukkit.*;
 
 public class DiscordClient {
 
-    private JSONArray userList;
-    private File userFile;
+    public static JSONArray userList;
+    private static File userFile;
 
     public static void initialise(String token) {
 
@@ -34,6 +31,7 @@ public class DiscordClient {
 
     private static void client(String token){
 
+        loadUsers();
         boolean whitelistEnabled = Main.getInstance().getConfig().getBoolean("enabled");
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
@@ -57,6 +55,9 @@ public class DiscordClient {
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(),"whitelist add " + args[1]));
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(), "whitelist reload"));
 
+                    addUser(event.getMessageAuthor().getDisplayName(), args[1]);
+                    System.out.println("Currently whitelisting: " + event.getMessageAuthor().getName());
+
                     //Informs the user in Discord that the username has been whitelisted.
                     event.getChannel().sendMessage("Successfully whitelisted: " + args[1]);
 
@@ -68,30 +69,26 @@ public class DiscordClient {
         });
     }
 
-    private void loadUsers() {
+    private static void loadUsers() {
         // Load the parser
         JSONParser parser = new JSONParser();
 
+        userFile = new File(Main.getInstance().getDataFolder(), "userlist.json");
+
         //Try to read the userlist file.
-        try (FileReader reader = new FileReader("userlist.json")) {
+        try (FileReader reader = new FileReader(userFile)) {
 
             Object obj = parser.parse(reader);
 
             //Saves the contents of the existing file to the userList variable to work with later.
-            userList = (JSONArray) obj;
+            userList = (JSONArray)obj;
 
 
         } catch (FileNotFoundException e) {
-            System.out.println("userlist.json is missing! Creating now...");
+            System.out.println("userlist.json is missing!");
 
-            try {
+            e.printStackTrace();
 
-                userFile = new File(Main.getInstance().getDataFolder(), "userlist.json");
-
-            } catch  (Exception ex) {
-                System.out.println("Could not create the file! Shutting down!");
-                Main.getInstance().getServer().getPluginManager().disablePlugin(Main.getInstance());
-            }
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -104,6 +101,19 @@ public class DiscordClient {
 
     private static void addUser(String userID, String minecraftID) {
 
+            JSONObject userDetails = new JSONObject();
 
+            userDetails.put("UserID", userID);
+            userDetails.put("minecraftID", minecraftID);
+
+            userList.add(userDetails);
+
+            try (FileWriter file = new FileWriter(userFile)) {
+                file.write(userList.toJSONString());
+                file.flush();
+                loadUsers();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 }
