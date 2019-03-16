@@ -55,8 +55,8 @@ public class DiscordClient {
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(),"whitelist add " + args[1]));
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(), "whitelist reload"));
 
-                    addUser(event.getMessageAuthor().getDisplayName(), args[1]);
-                    System.out.println("Currently whitelisting: " + event.getMessageAuthor().getName());
+                    addUser(event.getMessageAuthor().getIdAsString(), args[1]);
+                    System.out.println("Currently whitelisting: " + event.getMessageAuthor().getId());
 
                     //Informs the user in Discord that the username has been whitelisted.
                     event.getChannel().sendMessage("Successfully whitelisted: " + args[1]);
