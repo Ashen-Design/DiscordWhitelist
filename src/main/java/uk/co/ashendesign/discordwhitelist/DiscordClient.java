@@ -16,6 +16,8 @@ public class DiscordClient {
 
     public static JSONArray userList;
     private static File userFile;
+    private static String[] userDiscordIDs;
+    private static boolean whitelistAllowed;
 
     public static void initialise(String token) {
 
@@ -33,7 +35,6 @@ public class DiscordClient {
 
         loadUsers();
         boolean whitelistEnabled = Main.getInstance().getConfig().getBoolean("enabled");
-
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
         getLogger().info("Bot has connected to the Discord server.");
 
@@ -45,28 +46,73 @@ public class DiscordClient {
                 //Gets the full message contents
                 String message = event.getMessageContent();
                 //Splits message on spaces to get the username.
+                String sender = event.getMessageAuthor().getIdAsString();
+
                 String[] args = message.split(" ");
 
                 if(args.length < 1){
                     event.getChannel().sendMessage("You haven't provided a username. Please use !whitelist <username>");
                 }else{
 
-                    //Sends the whitelisting commands via the console.
-                    Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(),"whitelist add " + args[1]));
-                    Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(), "whitelist reload"));
+                  try{
 
-                    addUser(event.getMessageAuthor().getIdAsString(), args[1]);
-                    System.out.println("Currently whitelisting: " + event.getMessageAuthor().getId());
+                      checkUser(event.getMessageAuthor().getIdAsString());
 
-                    //Informs the user in Discord that the username has been whitelisted.
-                    event.getChannel().sendMessage("Successfully whitelisted: " + args[1]);
+                      if(whitelistAllowed){
+                          //Sends the whitelisting commands via the console.
+                          Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(),"whitelist add " + args[1]));
+                          Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(), "whitelist reload"));
 
-                    event.addReactionToMessage("✅");
+                          addUser(event.getMessageAuthor().getIdAsString(), args[1]);
+                          System.out.println("Currently whitelisting: " + event.getMessageAuthor().getId());
+
+                          //Informs the user in Discord that the username has been whitelisted.
+                          event.getChannel().sendMessage("Successfully whitelisted: " + args[1]);
+
+                          event.addReactionToMessage("✅");
+                      }else {
+                          System.out.println("Whitelist prevented: " + event.getMessageAuthor().getId());
+                          event.getChannel().sendMessage("You have already whitelisted a Minecraft username. Please speak to a moderator.");
+
+                          event.addReactionsToMessage("❎");
+                          whitelistAllowed = true;
+                      }
+
+                  }
+                  catch (Exception e){
+                      e.printStackTrace();
+                    }
                 }
             }else if(event.getMessageContent().contains("!whitelist") && !whitelistEnabled) {
                 event.getChannel().sendMessage("Whitelisting is currently disabled.");
             }
         });
+    }
+
+
+    private static void checkUser(String userID) {
+
+        //Creates instance of parser.
+        JSONParser parser = new JSONParser();
+
+        //Attempts to load the json file from data via FileReader
+        try (FileReader reader1 = new FileReader(userFile)){
+
+            //Parses the file and stores it as an object.
+            Object obj = parser.parse(reader1);
+
+            if(obj.toString().contains(userID)){
+                System.out.println("String found!");
+                whitelistAllowed = false;
+            }else{
+                whitelistAllowed = true;
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private static void loadUsers() {
