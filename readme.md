@@ -33,7 +33,7 @@ https://discordapp.com/oauth2/authorize?client_id=CLIENTID&scope=bot
 ```
 Once you've done this, the bot will now show up in the userlist of your Discord server.
 
-If you have set the `botToken` correctly, the bot should connect to your Discord when starting the server.
+If you have set the `clientID` correctly, the bot should connect to your Discord when starting the server.
 
 Now, when a user type `!whitelist <minecraftusername>` the bot should automatically check whether they have sent a request before, and if not, it will whitelist the provided username.
 
