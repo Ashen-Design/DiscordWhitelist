@@ -35,58 +35,70 @@ public class DiscordClient {
 
         loadUsers();
         boolean whitelistEnabled = Main.getInstance().getConfig().getBoolean("enabled");
-        DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
-        getLogger().info("Bot has connected to the Discord server.");
+        boolean discordEnabled = Main.getInstance().getConfig().getBoolean("enable-discord");
+        // If Discord integration is enabled:
 
-        api.addMessageCreateListener(event -> {
-            if(event.getMessageContent().equalsIgnoreCase("!notping")) {
-                event.getChannel().sendMessage("NOT PONG!");
-            } else if(event.getMessageContent().contains("!whitelist") && whitelistEnabled) {
-                //If user sends 'whitelist command' run this:
-                //Gets the full message contents
-                String message = event.getMessageContent();
-                //Splits message on spaces to get the username.
-                String sender = event.getMessageAuthor().getIdAsString();
+        if(discordEnabled){
+            DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
+            getLogger().info("Bot has connected to the Discord server.");
 
-                String[] args = message.split(" ");
+            api.addMessageCreateListener(event -> {
+                if(event.getMessageContent().equalsIgnoreCase("!notping")) {
+                    event.getChannel().sendMessage("NOT PONG!");
+                } else if(event.getMessageContent().contains("!whitelist") && whitelistEnabled) {
+                    //If user sends 'whitelist command' run this:
+                    //Gets the full message contents
+                    String message = event.getMessageContent();
+                    //Splits message on spaces to get the username.
+                    String sender = event.getMessageAuthor().getIdAsString();
 
-                if(args.length < 1){
-                    event.getChannel().sendMessage("You haven't provided a username. Please use !whitelist <username>");
-                }else{
+                    String[] args = message.split(" ");
 
-                  try{
+                    if(args.length < 1){
+                        event.getChannel().sendMessage("You haven't provided a username. Please use !whitelist <username>");
+                    }else{
 
-                      checkUser(event.getMessageAuthor().getIdAsString());
+                        try{
 
-                      if(whitelistAllowed){
-                          //Sends the whitelisting commands via the console.
-                          Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(),"whitelist add " + args[1]));
-                          Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(), "whitelist reload"));
+                            checkUser(event.getMessageAuthor().getIdAsString());
 
-                          addUser(event.getMessageAuthor().getIdAsString(), args[1]);
-                          System.out.println("Currently whitelisting: " + event.getMessageAuthor().getId());
+                            // Needs to check whether user has role (if enabled in the config).
 
-                          //Informs the user in Discord that the username has been whitelisted.
-                          event.getChannel().sendMessage("Successfully whitelisted: " + args[1]);
+                            if(whitelistAllowed){
 
-                          event.addReactionToMessage("✅");
-                      }else {
-                          System.out.println("Whitelist prevented: " + event.getMessageAuthor().getId());
-                          event.getChannel().sendMessage("You have already whitelisted a Minecraft username. Please speak to a moderator.");
+                                //If Multi-server is enabled, and this is main Discord plugin, send a message via WebSockets.
 
-                          event.addReactionsToMessage("❎");
-                          whitelistAllowed = true;
-                      }
 
-                  }
-                  catch (Exception e){
-                      e.printStackTrace();
+
+                                //Sends the whitelisting commands via the console.
+                                Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(),"whitelist add " + args[1]));
+                                Bukkit.getScheduler().runTask(Main.getInstance(), () -> Bukkit.dispatchCommand(getConsoleSender(), "whitelist reload"));
+
+                                addUser(event.getMessageAuthor().getIdAsString(), args[1]);
+                                System.out.println("Currently whitelisting: " + event.getMessageAuthor().getId());
+
+                                //Informs the user in Discord that the username has been whitelisted.
+                                event.getChannel().sendMessage("Successfully whitelisted: " + args[1]);
+
+                                event.addReactionToMessage("✅");
+                            }else {
+                                System.out.println("Whitelist prevented: " + event.getMessageAuthor().getId());
+                                event.getChannel().sendMessage("You have already whitelisted a Minecraft username. Please speak to a moderator.");
+
+                                event.addReactionsToMessage("❎");
+                                whitelistAllowed = true;
+                            }
+
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
+                }else if(event.getMessageContent().contains("!whitelist") && !whitelistEnabled) {
+                    event.getChannel().sendMessage("Whitelisting is currently disabled.");
                 }
-            }else if(event.getMessageContent().contains("!whitelist") && !whitelistEnabled) {
-                event.getChannel().sendMessage("Whitelisting is currently disabled.");
-            }
-        });
+            });
+        }
     }
 
 
