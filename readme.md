@@ -4,6 +4,7 @@ DiscordWhitelist is a plugin for Spigot 1.13 designed to allow server owners to 
 ## Features
 - Check users have a specific Discord role
 - Allows admins to disable the whitelisting feature
+- Allows one authentication per Discord user
 
 ## Permissions
 There is only one permission for the plugin:
@@ -20,9 +21,9 @@ Once you've done that, the server operator will need to put their Discord into '
 
 Once in Developer Mode, the owner can right click elements on Discord to get their IDs. The important ones are:
 
-- `ownerID` - This is the server owner's personal ID. This allows the plugin to recognise who can use commands with the bot directly inside Discord.
-- `roleID` - This is the role that you want to check for in order to allow a player to be whitelisted.
-- `channelID` - This is the channel in which the bot will send the messages to whitelist players.
+- `ownerID` - This is the server owner's personal ID. This allows the plugin to recognise who can use commands with the bot directly inside Discord. (Not yet implemented)
+- `roleID` - This is the role that you want to check for in order to allow a player to be whitelisted. (Not yet implemented)
+- `channelID` - This is the channel in which the bot will send the messages to whitelist players. (Not yet implemented)
 
 ## Usage
 To get started, make sure the plugin is running on the server. If you have set up the config correctly, the bot will need to be invited into your Discord server. To do this, simply replace `CLIENTID` in the URL below, and then load that link in a browser.
@@ -32,15 +33,16 @@ https://discordapp.com/oauth2/authorize?client_id=CLIENTID&scope=bot
 ```
 Once you've done this, the bot will now show up in the userlist of your Discord server.
 
-If you have set the `channelID` correctly, the bot should automatically send a message saying *'DiscordWhitelist enabled'*.
+If you have set the `clientID` correctly, the bot should connect to your Discord when starting the server.
 
-Now, when a user type `!whitelist <minecraftusername>` the bot should automatically check whether they have the role specified in the config file.
-If they do, the bot will automatically whitelist the user on the server (provided it is a valid username, of course).
+Now, when a user type `!whitelist <minecraftusername>` the bot should automatically check whether they have sent a request before, and if not, it will whitelist the provided username.
+
+If the command runs successfully, the bot will automatically whitelist the user on the server (provided it is a valid username, of course).
 
 Once the bot whitelists a user, it will automatically reload the whitelist.
 
 Once this has been completed, the bot will respond to the user informing them that they have been whitelisted.
 
 ## Planned Features
-- Bungeecord support
+- Multi-server support
 - Authcode-based whitelisting
