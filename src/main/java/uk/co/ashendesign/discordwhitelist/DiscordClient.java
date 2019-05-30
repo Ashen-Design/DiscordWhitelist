@@ -98,6 +98,8 @@ public class DiscordClient {
                     event.getChannel().sendMessage("Whitelisting is currently disabled.");
                 }
             });
+        } else{
+            System.out.println("[NYI] Discord integration disabled, switching to WebSocket listening.");
         }
     }
 
